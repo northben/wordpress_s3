@@ -69,7 +69,7 @@ resource "aws_ecs_service" "this" {
   force_new_deployment = true
   network_configuration {
     subnets          = [aws_subnet.this_1.id, aws_subnet.this_2.id]
-    assign_public_ip = false
+    assign_public_ip = true
     security_groups  = [aws_security_group.this.id]
   }
   load_balancer {
