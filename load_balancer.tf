@@ -11,9 +11,9 @@ resource "aws_lb_target_group" "this" {
   protocol    = "HTTP"
   vpc_id      = aws_vpc.this.id
   target_type = "ip"
-#   health_check {
-#     path = "/en-US/account/login"
-#   }
+  health_check {
+    matcher = "200,302"
+  }
 }
 resource "aws_lb_listener" "this" {
   load_balancer_arn = aws_lb.this.arn
