@@ -14,6 +14,7 @@ resource "aws_lb_target_group" "this" {
   health_check {
     matcher = "200,302"
   }
+  deregistration_delay = 1
 }
 resource "aws_lb_listener" "this" {
   load_balancer_arn = aws_lb.this.arn
