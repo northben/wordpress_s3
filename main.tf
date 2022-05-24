@@ -141,6 +141,6 @@ resource "aws_ecs_service" "this" {
   }
 }
 resource "aws_cloudwatch_log_group" "this" {
-  name = "ecs"
+  name              = "ecs"
   retention_in_days = 1
 }
