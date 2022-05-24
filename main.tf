@@ -13,6 +13,47 @@ provider "aws" {
   region  = var.aws_region
 }
 
+resource "aws_iam_role" "task_role" {
+  name = "${var.container_name}_task_execution_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+      },
+    ]
+  })
+
+  inline_policy {
+    name = "allow_s3"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action = [
+            "s3:*",
+          ]
+          Effect   = "Allow"
+          Resource = "${aws_s3_bucket.this.arn}/*"
+        },
+        {
+          Action = [
+            "s3:ListAllMyBuckets",
+            "s3:GetBucketLocation",
+          ]
+          Effect   = "Allow"
+          Resource = "*"
+        },
+      ]
+    })
+  }
+}
 resource "aws_ecs_task_definition" "this" {
   family                   = var.container_name
   requires_compatibilities = ["FARGATE"]
@@ -20,6 +61,7 @@ resource "aws_ecs_task_definition" "this" {
   cpu                      = 1024
   memory                   = 2048
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.task_role.arn
   container_definitions = jsonencode([
     {
       name      = var.container_name
@@ -27,10 +69,23 @@ resource "aws_ecs_task_definition" "this" {
       cpu       = 1024
       memory    = 2048
       essential = true
+      environment = [
+        { name = "WORDPRESS_DB_HOST", value = aws_db_instance.this.endpoint },
+        { name = "WORDPRESS_DB_NAME", value = var.container_name },
+        { name = "WORDPRESS_DB_USER", value = local.db_cred.username },
+        { name = "WORDPRESS_DB_PASSWORD", value = local.db_cred.password },
+        { name = "WP_DEBUG", value = "true" },
+      ]
       portMappings = [
         {
           containerPort = 80
         },
+      ]
+      mountPoints = [
+        {
+          sourceVolume  = "wordpress-efs",
+          containerPath = "/var/www/html/"
+        }
       ]
       logConfiguration = {
         logDriver = "awslogs",
@@ -42,6 +97,13 @@ resource "aws_ecs_task_definition" "this" {
       }
     }
   ])
+  volume {
+    name = "wordpress-efs"
+    efs_volume_configuration {
+      file_system_id     = aws_efs_file_system.this.id
+      transit_encryption = "DISABLED"
+    }
+  }
   runtime_platform {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
