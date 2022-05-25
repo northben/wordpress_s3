@@ -110,7 +110,7 @@ resource "aws_ecs_task_definition" "this" {
 
 resource "aws_ecs_cluster" "this" {
   name               = var.container_name
-  capacity_providers = ["FARGATE"]
+  capacity_providers = ["FARGATE_SPOT"]
   configuration {
     execute_command_configuration {
       logging = "OVERRIDE"
