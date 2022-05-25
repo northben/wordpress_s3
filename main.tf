@@ -66,8 +66,6 @@ resource "aws_ecs_task_definition" "this" {
     {
       name      = var.container_name
       image     = "wordpress:php8.0-apache"
-      cpu       = 1024
-      memory    = 2048
       essential = true
       environment = [
         { name = "WORDPRESS_DB_HOST", value = aws_db_instance.this.endpoint },
