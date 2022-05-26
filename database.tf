@@ -2,7 +2,7 @@ resource "aws_db_instance" "this" {
   allocated_storage    = 5
   engine               = "mariadb"
   engine_version       = "10.6.5"
-  instance_class       = "db.t4g.small"
+  instance_class       = "db.t4g.micro"
   name                 = var.container_name
   username             = local.db_cred.username
   password             = local.db_cred.password
