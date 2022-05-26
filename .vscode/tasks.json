@@ -42,6 +42,46 @@
                 "kind": "build",
                 "isDefault": true
             }
-        }
+        },
+        {
+            "label": "packer build all",
+            "type": "shell",
+            "command": "packer build ./packer/",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "packer download",
+            "type": "shell",
+            "command": "packer build -only=null.download ./packer/",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "packer build wordpress",
+            "type": "shell",
+            "command": "packer build -only=wordpress_bgn.docker.this ./packer/",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "docker compose up",
+            "type": "shell",
+            "command": "docker compose up -d",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
     ]
 }

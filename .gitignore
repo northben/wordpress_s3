@@ -9,3 +9,7 @@ crash.*.log
 terraform.rc
 .terraform.lock.hcl
 variables.tf
+db
+amazon-s3-and-cloudfront.zip
+packer/wordpress_modules
+wp
