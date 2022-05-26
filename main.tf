@@ -65,7 +65,7 @@ resource "aws_ecs_task_definition" "this" {
   container_definitions = jsonencode([
     {
       name      = var.container_name
-      image     = "wordpress:php8.0-apache"
+      image     = "243742465111.dkr.ecr.us-east-2.amazonaws.com/wordpress:latest"
       essential = true
       environment = [
         { name = "WORDPRESS_DB_HOST", value = aws_db_instance.this.endpoint },
