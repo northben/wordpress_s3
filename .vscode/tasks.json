@@ -83,5 +83,25 @@
                 "isDefault": true
             }
         },
+        {
+            "label": "docker compose down",
+            "type": "shell",
+            "command": "docker compose down",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "docker login to ECR",
+            "type": "shell",
+            "command": "AWS_PROFILE=pixelchef aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 243742465111.dkr.ecr.us-east-2.amazonaws.com",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
     ]
 }
